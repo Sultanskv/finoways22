@@ -1,0 +1,40 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+
+ 
+<div class="content">
+    <div class="row">
+      <div class="col-sm md lg xl xxl-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Admin Trade Status</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive table-container"> <!-- Add the table-container class here -->
+              
+
+
+                               comming soon 2024
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% if error == "no" %}
+<script>
+  alert('Signup Successful');
+  window.location = ('{% url 'client_signals' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+  alert('Something went wrong , Try Again...');
+</script> 
+
+{% endif %}
+
+
+{% endblock %}

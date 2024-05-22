@@ -1,0 +1,66 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+<script>
+  new DataTable('#example', {
+    layout: {
+        topStart: {
+            buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+        }
+    }
+});
+</script>
+ 
+<div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Admin Help Center</h4>
+          </div>
+          <div class="card-body">
+            {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+              {{ error_message }}
+            </div>
+            {% endif %}
+            <div class="table-responsive table-container">
+              <table class="table tablesorter table-bordered table-hover" id="example">
+                <thead class="text-primary bg-secondary">
+                  <tr>
+                    <th>ID</th>
+                    <th>Client Name</th>
+                    <th>Message</th>
+                    <th>Timestamp</th>
+                    <th>Views</th>
+                 
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for message in messages %}
+                  <tr>
+                      <td>{{ message.id }}</td>
+                      <td>{{ message.client_name }}</td>
+                      <td>{{ message.message }}</td>
+                      <td>{{ message.timestamp }}</td>
+                      <td><a>Views</a></td>
+                    
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+
+
+
+

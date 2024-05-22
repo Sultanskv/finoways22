@@ -1,0 +1,13 @@
+
+.nav-link{
+    color : white !important;
+}
+
+.nav-link:hover{
+    color : yellow !important;
+    background-color: skyblue;
+    border-radius: 15px;
+}
+
+
+

@@ -1,0 +1,49 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+
+ 
+<div class="content">
+    <div class="row">
+      <div class="col-sm md lg xl xxl-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Signals Table</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive table-container"> <!-- Add the table-container class here -->
+              <table class="table tablesorter" id="signalsTable">
+                <thead class="text-primary">
+                  <tr>
+                    <th>ID</th>
+                    <th>Signal Time</th>
+                    <th>SYMBOL</th>
+                    <th>TYPE</th>
+                    <th>QUANTITY</th>
+                    <th>ENTRY PRICE</th>
+                    <th>EXIT PRICE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for trade in trades %}
+                  <tr>
+                      <td>{{ trade.id }}</td>
+                      <td>{{ trade.created_at }}</td>
+                      <td>{{ trade.SYMBOL }}</td>
+                      <td>{{ trade.TYPE }}</td>
+                      <td>{{ trade.QUANTITY }}</td>
+                      <td>{{ trade.ENTRY_PRICE }}</td>
+                      <td>{{ trade.EXIT_PRICE }}</td>
+                  </tr>
+                  {% endfor %}
+                 </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

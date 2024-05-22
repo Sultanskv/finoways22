@@ -1,0 +1,435 @@
+{% extends "admin_base.html" %} 
+
+{% block main %}
+
+<style>
+  /* Custom CSS for Admin Dashboard */
+  .card-shadow {
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
+  .card-stats {
+    background-color: #fff;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+  }
+
+  .card-stats:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-stats .card-body {
+    padding: 20px;
+  }
+
+  .card-stats .card-footer {
+    border-top: 1px solid #eee;
+    padding: 15px 20px;
+  }
+
+  .card-stats .card-footer hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .card-stats .numbers {
+    text-align: left;
+  }
+
+  .card-stats .numbers p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .card-stats .numbers p.card-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 5px;
+  }
+
+  .card-stats .numbers p.card-category {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 5px;
+  
+  }
+
+  .card-stats .icon-big {
+    font-size: 36px;
+    color: #f96332;
+  }
+
+  /* Additional styling for Admin Dashboard */
+  .text-danger {
+    color: #dc3545 !important;
+  }
+
+  .text-success {
+    color: #28a745 !important;
+  }
+
+  .p-2 {
+    padding: 0.5rem !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+
+  .border-bottom {
+    border-bottom: 2px solid orange !important;
+  }
+
+  .text-center {
+    text-align: center !important;
+  }
+
+  .col-sm-12 {
+    width: 100%;
+  }
+
+  .col-lg-3,
+  .col-md-6,
+  .col-sm-6 {
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+  }
+</style>
+
+<h4 class="text-danger p-2" style="border-bottom : 2px solid orange">Admin Dashboard</h4>
+<div class="row text-center">
+  <div class="col-sm md lg xl xxl-12 p-2">
+    <div class="card-shadow">
+      <div class="card-body">
+        <h4 class="text-success"> Welcome Back To Admin Dashboard </h4>
+        {% comment %} <h5 class="text-capitalize">{{request.user.fullname}}</h5> {% endcomment %}
+
+
+        <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Total Live Account</p>
+                                  <p class="card-title">{{ clientcount }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Add other similar blocks for other options -->
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Total Demo Account</p>
+                                  <p class="card-title">{{ total_demo_account }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Total Licence</p>
+                                  <p class="card-title">{{ total_licence }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#" >View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Total 2 Day Service</p>
+                                  <p class="card-title">{{ total_2days_service }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- Add other rows for more options -->
+      <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Active Live Account</p>
+                                  <p class="card-title">{{ active_live_account }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Add other similar blocks for other options -->
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Active Demo Account</p>
+                                  <p class="card-title">{{ active_demo_account }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Remaining Licence</p>
+                                  <p class="card-title">{{ remaining_licence }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Total Active 2 Day Service</p>
+                                  <p class="card-title">{{ active_2days_service }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- Add more rows for additional options -->
+      <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Expired Live Account</p>
+                                  <p class="card-title">{{ expired_total_account }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Add other similar blocks for other options -->
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Expired Demo Account</p>
+                                  <p class="card-title">{{ expired_demo_account }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Used Licence</p>
+                                  <p class="card-title">{{ used_licence }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                  <div class="card-body">
+                      <div class="row">
+                          <div class="col-5 col-md-4">
+                              <div class="icon-big text-center icon-warning">
+                                  <i class="tim-icons icon-single-02 text-primary"></i>
+                              </div>
+                          </div>
+                          <div class="col-7 col-md-8">
+                              <div class="numbers">
+                                  <p class="card-category">Total Converted Accounts</p>
+                                  <p class="card-title">{{ total_converted_accounts }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <hr>
+                      <div class="stats">
+                          <a href="#">View</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- Add more rows for additional options -->
+
+
+      </div>
+    </div>
+  </div>
+</div>    
+{% endblock %}

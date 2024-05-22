@@ -1,0 +1,94 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+<script>
+  new DataTable('#example', {
+    layout: {
+        topStart: {
+            buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+        }
+    }
+});
+</script>
+ 
+<div class="content">
+    <div class="row">
+      <div class="col-sm md lg xl xxl-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Admin Trade History</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive table-container"> <!-- Add the table-container class here -->
+              <table class="table tablesorter table-bordered table-hover" id="example">
+                <thead class="text-primary bg-secondary">
+                  <tr>
+                    <th>ID</th>
+                    <th>Signal Time</th>
+                    <th>SYMBOL</th>
+                    <th>TYPE</th>
+                    <th>QUANTITY</th>
+                    {% comment %} <th class="text-center">All</th> {% endcomment %}
+                    <th>ENTRY PRICE</th>
+                    <th>EXIT PRICE</th>
+                    <th>P & L</th>
+                    <th>Cumulative P & L</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for signal in clientsignal %}
+                  <tr>
+                      <td>{{ signal.id }}</td>
+                      <td>{{ signal.created_at }}</td>
+                      <td>{{ signal.SYMBOL }}</td>
+                      <td>{{ signal.TYPE }}</td>
+                      <td>{{ signal.QUANTITY }}</td>
+                      <td>{{ signal.ENTRY_PRICE }}</td>
+                      <td>{{ signal.EXIT_PRICE }}</td>
+                      <td>{{ signal.profit_loss }}</td>
+                      <td>{{ signal.cumulative_pl }}</td>
+                  </tr>
+                  {% endfor %}
+                 </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% if error == "no" %}
+<script>
+  alert('Signup Successful');
+  window.location = ('{% url 'client_signals' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+  alert('Something went wrong , Try Again...');
+</script> 
+
+{% endif %}
+
+
+<script>
+  // Replace "None" values with hyphen (-) in the table
+  document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('example');
+    const rows = table.getElementsByTagName('tr');
+    
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].getElementsByTagName('td');
+      
+      for (let j = 0; j < cells.length; j++) {
+        if (cells[j].textContent.trim() === 'None') {
+          cells[j].textContent = '-';
+        }
+      }
+    }
+  });
+</script>
+
+
+{% endblock %}

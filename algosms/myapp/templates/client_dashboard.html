@@ -1,0 +1,609 @@
+{% extends "client_base.html" %}
+
+{% block main %}
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input {
+    display: none;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: rgb(6, 6, 6);
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: gold;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  button[type="submit"] {
+    background-color: black;      /* Background color */
+    color: gold;                  /* Text color */
+    border: 2px solid gold;       /* Border color */
+    border-radius: 5px;           /* Rounded corners */
+    padding: 10px 20px;           /* Padding */
+    font-size: 16px;              /* Font size */
+    font-weight: bold;            /* Bold text */
+    cursor: pointer;              /* Pointer cursor on hover */
+    transition: all 0.3s ease;    /* Smooth transition for effects */
+    box-shadow: 0 4px 8px rgba(245, 222, 74, 0.5); /* Add shadow */
+}
+
+button[type="submit"]:hover {
+    background-color: gold;       /* Background color on hover */
+    color: black;                 /* Text color on hover */
+    box-shadow: 0 6px 12px rgba(245, 222, 74, 0.7); /* More pronounced shadow */
+    transform: scale(1.05);       /* Slightly enlarge on hover */
+}
+
+button[type="submit"]:focus {
+    outline: none;                /* Remove default outline */
+    box-shadow: 0 0 10px gold;    /* Gold outline on focus */
+}
+</style>
+
+<div class="content">
+  {% comment %} <div class="row justify-content-center"> <!-- Center the content within the row --> {% endcomment %}
+   
+    {% comment %} <div class="content">
+      <div class="row"> {% endcomment %}
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Welcome To Finoways</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive table-container">
+                <form method="post" >
+                  {% csrf_token %}
+                  <table class="table tablesorter" id="signalsTable">
+                    <thead class="text-white">
+                      <tr>
+                        <th>NO</th>
+                        <th>SYMBOL</th>
+                        <th>QUANTITY</th>
+                        <th>SEGMENT</th>
+                        <th>ORDER TYPE</th>
+                        <th>TRADING</th>
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Entry 1: COMEX, Limit Order -->
+                      <tr>
+                        <td>1</td>
+                        <td>XAUUSD</td>
+                        {% for s in signals %}
+                          {% if "XAUUSD" == s.SYMBOL%}
+                            <td><input type="text" name="QUANTITY1" value="{{s.QUANTITY}}"></td>
+                        
+                          
+                        <td>COMEX</td>
+                        <td>
+                          <select name="ORDER_TYPE1">
+                            <option value="Market">Market Order</option>
+                            <option value="Limit">Limit Order</option>
+                          </select>
+                        </td>
+                        <td>
+                          <label class="switch"><input type="checkbox" name="TRADING1" {% if s.trade == 'on' %} checked {% endif %}>
+                            <span class="slider round"></span>
+                          </label>
+                        </td>
+                        {% endif %}  
+                      {% endfor %}
+                      </tr>
+                      <!-- Entry 2: COMEX, Market Order -->
+                      <tr>
+                        <td>2</td>
+                        <td>USOIL</td>
+                        {% for s in signals %}
+                          {% if "USOIL" == s.SYMBOL%}
+                            <td><input type="text" name="QUANTITY2" value="{{s.QUANTITY}}"></td>
+                          
+                         
+                        <td>COMEX</td>
+                        <td>
+                          <select name="ORDER_TYPE2">
+                            <option value="Market" selected>Market Order</option>
+                            <option value="Limit">Limit Order</option>
+                          </select>
+                        </td>
+                        <td>
+                          <label class="switch"><input type="checkbox" name="TRADING2" {% if s.trade == 'on' %} checked {% endif %}>
+                            <span class="slider round"></span>
+                          </label>
+                        </td>
+                        {% endif %}  
+                      {% endfor %}
+                      </tr>
+                      <!-- Entry 3-5: FOREX, Limit Order -->
+                      <tr>
+                        <td>3</td>
+                        
+                        <td>EURUSD</td>
+                        {% for s in signals %}
+                          {% if "EURUSD" == s.SYMBOL%}
+                            <td><input type="text" name="QUANTITY3" value="{{s.QUANTITY}}"></td>
+                         
+                        <td>FOREX</td>
+                        <td>
+                          <select name="ORDER_TYPE3">
+                            <option value="Market">Market Order</option>
+                            <option value="Limit">Limit Order</option>
+                          </select>
+                        </td>
+                        <td>
+                          <label class="switch"><input type="checkbox" name="TRADING3" {% if s.trade == 'on' %} checked {% endif %}>
+                            <span class="slider round"></span>
+                          </label>
+                        </td>
+                        {% endif %}  
+                      {% endfor %}
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>USDJPY</td>
+                        {% for s in signals %}
+                          {% if "USDJPY" == s.SYMBOL%}
+                            <td><input type="text" name="QUANTITY4" value="{{s.QUANTITY}}"></td>
+                         
+                         
+                        <td>FOREX</td>
+                        <td>
+                          <select name="ORDER_TYPE4">
+                            <option value="Market">Market Order</option>
+                            <option value="Limit">Limit Order</option>
+                          </select>
+                        </td>
+                        <td>
+                          <label class="switch"><input type="checkbox" name="TRADING4" {% if s.trade == 'on' %} checked {% endif %}>
+                            <span class="slider round"></span>
+                          </label>
+                        </td>
+                        {% endif %}  
+                      {% endfor %}
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>GBPUSD</td>
+                        {% for s in signals %}
+                          {% if "GBPUSD" == s.SYMBOL%}
+                            <td><input type="text" name="QUANTITY5" value="{{s.QUANTITY}}"></td>
+                         
+                        <td>FOREX</td>
+                        <td>
+                          <select name="ORDER_TYPE5">
+                            <option value="Market">Market Order</option>
+                            <option value="Limit">Limit Order</option>
+                          </select>
+                        </td>
+                        <td>
+                          <label class="switch"><input type="checkbox" name="TRADING5" {% if s.trade == 'on' %} checked {% endif %}>
+                            <span class="slider round"></span>
+                          </label>
+                        </td>
+                        {% endif %}  
+                      {% endfor %}
+                      </tr>
+
+                      <!-- Entry 6: FOREX, Limit Order -->
+                      <tr>
+                        <td>6</td>
+                        
+                        <td>EURJPY</td>
+                        {% for s in signals %}
+                          {% if "EURJPY" == s.SYMBOL%}
+                            <td><input type="text" name="QUANTITY6" value="{{s.QUANTITY}}"></td>
+                          
+                        <td>FOREX</td>
+                        <td>
+                          <select name="ORDER_TYPE6">
+                            <option value="Market">Market Order</option>
+                            <option value="Limit">Limit Order</option>
+                          </select>
+                        </td>
+                        <td>
+                          <label class="switch"><input type="checkbox" name="TRADING6" {% if s.trade == 'on' %} checked {% endif %}>
+                            <span class="slider round"></span>
+                          </label>
+                        </td>
+                        {% endif %}  
+                      {% endfor %}
+                      </tr>
+
+
+                       <!-- Entry 7: FOREX, Limit Order -->
+                       <tr>
+                        <td>7</td>
+                        
+                        <td>AUDNZD</td>
+                        {% for s in signals %}
+                          {% if "AUDNZD" == s.SYMBOL%}
+                            <td><input type="text" name="QUANTITY7" value="{{s.QUANTITY}}"></td>
+                          
+                        <td>FOREX</td>
+                        <td>
+                          <select name="ORDER_TYPE7">
+                            <option value="Market">Market Order</option>
+                            <option value="Limit">Limit Order</option>
+                          </select>
+                        </td>
+                        <td>
+                          <label class="switch"><input type="checkbox" name="TRADING7" {% if s.trade == 'on' %} checked {% endif %}>
+                            <span class="slider round"></span>
+                          </label>
+                        </td>
+                        {% endif %}  
+                      {% endfor %}
+                      </tr>
+
+                    <!-- Entry 8: FOREX, Limit Order -->
+                    <tr>
+                    <td>8</td>
+                    
+                    <td>GBPNZD</td>
+                    {% for s in signals %}
+                      {% if "GBPNZD" == s.SYMBOL%}
+                        <td><input type="text" name="QUANTITY8" value="{{s.QUANTITY}}"></td>
+                      
+                    <td>FOREX</td>
+                    <td>
+                      <select name="ORDER_TYPE8">
+                        <option value="Market">Market Order</option>
+                        <option value="Limit">Limit Order</option>
+                      </select>
+                    </td>
+                    <td>
+                      <label class="switch"><input type="checkbox" name="TRADING8" {% if s.trade == 'on' %} checked {% endif %}>
+                        <span class="slider round"></span>
+                      </label>
+                    </td>
+                    {% endif %}  
+                  {% endfor %}
+                  </tr>
+
+                  <!-- Entry 9: FOREX, Limit Order -->
+                  <tr>
+                    <td>9</td>
+                    
+                    <td>USDCHF</td>
+                    {% for s in signals %}
+                      {% if "USDCHF" == s.SYMBOL%}
+                        <td><input type="text" name="QUANTITY9" value="{{s.QUANTITY}}"></td>
+                      
+                    <td>FOREX</td>
+                    <td>
+                      <select name="ORDER_TYPE9">
+                        <option value="Market">Market Order</option>
+                        <option value="Limit">Limit Order</option>
+                      </select>
+                    </td>
+                    <td>
+                      <label class="switch"><input type="checkbox" name="TRADING9" {% if s.trade == 'on' %} checked {% endif %}>
+                        <span class="slider round"></span>
+                      </label>
+                    </td>
+                    {% endif %}  
+                  {% endfor %}
+                  </tr>  
+
+
+                   <!-- Entry 10: FOREX, Limit Order -->
+                   <tr>
+                    <td>10</td>
+                    
+                    <td>GBPCAD</td>
+                    {% for s in signals %}
+                      {% if "GBPCAD" == s.SYMBOL%}
+                        <td><input type="text" name="QUANTITY10" value="{{s.QUANTITY}}"></td>
+                      
+                    <td>FOREX</td>
+                    <td>
+                      <select name="ORDER_TYPE10">
+                        <option value="Market">Market Order</option>
+                        <option value="Limit">Limit Order</option>
+                      </select>
+                    </td>
+                    <td>
+                      <label class="switch"><input type="checkbox" name="TRADING10" {% if s.trade == 'on' %} checked {% endif %}>
+                        <span class="slider round"></span>
+                      </label>
+                    </td>
+                    {% endif %}  
+                  {% endfor %}
+                  </tr> 
+
+
+                  <!-- Entry 11: FOREX, Limit Order -->
+                  <tr>
+                    <td>11</td>
+                    
+                    <td>EURAUD</td>
+                    {% for s in signals %}
+                      {% if "EURAUD" == s.SYMBOL%}
+                        <td><input type="text" name="QUANTITY11" value="{{s.QUANTITY}}"></td>
+                      
+                    <td>FOREX</td>
+                    <td>
+                      <select name="ORDER_TYPE11">
+                        <option value="Market">Market Order</option>
+                        <option value="Limit">Limit Order</option>
+                      </select>
+                    </td>
+                    <td>
+                      <label class="switch"><input type="checkbox" name="TRADING11" {% if s.trade == 'on' %} checked {% endif %}>
+                        <span class="slider round"></span>
+                      </label>
+                    </td>
+                    {% endif %}  
+                  {% endfor %}
+                  </tr>
+
+
+                  <!-- Entry 12: FOREX, Limit Order -->
+                  <tr>
+                  <td>12</td>
+                  
+                  <td>AUDNZD</td>
+                  {% for s in signals %}
+                    {% if "AUDNZD" == s.SYMBOL%}
+                      <td><input type="text" name="QUANTITY12" value="{{s.QUANTITY}}"></td>
+                    
+                  <td>FOREX</td>
+                  <td>
+                    <select name="ORDER_TYPE12">
+                      <option value="Market">Market Order</option>
+                      <option value="Limit">Limit Order</option>
+                    </select>
+                  </td>
+                  <td>
+                    <label class="switch"><input type="checkbox" name="TRADING12" {% if s.trade == 'on' %} checked {% endif %}>
+                      <span class="slider round"></span>
+                    </label>
+                  </td>
+                  {% endif %}  
+                {% endfor %}
+                </tr>
+
+
+                   <!-- Entry 13: FOREX, Limit Order -->
+                   <tr>
+                    <td>13</td>
+                    
+                    <td>EURGBP</td>
+                    {% for s in signals %}
+                      {% if "EURGBP" == s.SYMBOL%}
+                        <td><input type="text" name="QUANTITY13" value="{{s.QUANTITY}}"></td>
+                      
+                    <td>FOREX</td>
+                    <td>
+                      <select name="ORDER_TYPE13">
+                        <option value="Market">Market Order</option>
+                        <option value="Limit">Limit Order</option>
+                      </select>
+                    </td>
+                    <td>
+                      <label class="switch"><input type="checkbox" name="TRADING13" {% if s.trade == 'on' %} checked {% endif %}>
+                        <span class="slider round"></span>
+                      </label>
+                    </td>
+                    {% endif %}  
+                  {% endfor %}
+                  </tr>
+
+              <!-- Entry 14: FOREX, Limit Order -->
+              <tr>
+                  <td>14</td>
+                  
+                  <td>NZDUSD</td>
+                  {% for s in signals %}
+                    {% if "NZDUSD" == s.SYMBOL%}
+                      <td><input type="text" name="QUANTITY14" value="{{s.QUANTITY}}"></td>
+                    
+                  <td>FOREX</td>
+                  <td>
+                    <select name="ORDER_TYPE14">
+                      <option value="Market">Market Order</option>
+                      <option value="Limit">Limit Order</option>
+                    </select>
+                  </td>
+                  <td>
+                    <label class="switch"><input type="checkbox" name="TRADING14" {% if s.trade == 'on' %} checked {% endif %}>
+                      <span class="slider round"></span>
+                    </label>
+                  </td>
+                  {% endif %}  
+                {% endfor %}
+              </tr>  
+
+
+            <!-- Entry 15: FOREX, Limit Order -->
+              <tr>
+              <td>15</td>
+              
+              <td>USDCAD</td>
+              {% for s in signals %}
+                {% if "USDCAD" == s.SYMBOL%}
+                  <td><input type="text" name="QUANTITY15" value="{{s.QUANTITY}}"></td>
+                
+              <td>FOREX</td>
+              <td>
+                <select name="ORDER_TYPE15">
+                  <option value="Market">Market Order</option>
+                  <option value="Limit">Limit Order</option>
+                </select>
+              </td>
+              <td>
+                <label class="switch"><input type="checkbox" name="TRADING15" {% if s.trade == 'on' %} checked {% endif %}>
+                  <span class="slider round"></span>
+                </label>
+              </td>
+              {% endif %}  
+              {% endfor %}
+            </tr> 
+
+
+            <!-- Entry 16: FOREX, Limit Order -->
+            <tr>
+              <td>16</td>
+              
+              <td>AUDUSD</td>
+              {% for s in signals %}
+                {% if "AUDUSD" == s.SYMBOL%}
+                  <td><input type="text" name="QUANTITY16" value="{{s.QUANTITY}}"></td>
+                
+              <td>FOREX</td>
+              <td>
+                <select name="ORDER_TYPE17">
+                  <option value="Market">Market Order</option>
+                  <option value="Limit">Limit Order</option>
+                </select>
+              </td>
+              <td>
+                <label class="switch"><input type="checkbox" name="TRADING16" {% if s.trade == 'on' %} checked {% endif %}>
+                  <span class="slider round"></span>
+                </label>
+              </td>
+              {% endif %}  
+            {% endfor %}
+          </tr> 
+
+
+          <!-- Entry 17: FOREX, Limit Order -->
+          <tr>
+            <td>17</td>
+            
+            <td>GBPJPY</td>
+            {% for s in signals %}
+              {% if "GBPJPY" == s.SYMBOL%}
+                <td><input type="text" name="QUANTITY17" value="{{s.QUANTITY}}"></td>
+              
+            <td>FOREX</td>
+            <td>
+              <select name="ORDER_TYPE17">
+                <option value="Market">Market Order</option>
+                <option value="Limit">Limit Order</option>
+              </select>
+            </td>
+            <td>
+              <label class="switch"><input type="checkbox" name="TRADING17" {% if s.trade == 'on' %} checked {% endif %}>
+                <span class="slider round"></span>
+              </label>
+            </td>
+            {% endif %}  
+          {% endfor %}
+        </tr>
+
+
+      <!-- Entry 18: FOREX, Limit Order -->
+          <tr>
+          <td>18</td>
+          
+          <td>AUDJPY</td>
+          {% for s in signals %}
+            {% if "AUDJPY" == s.SYMBOL%}
+              <td><input type="text" name="QUANTITY18" value="{{s.QUANTITY}}"></td>
+            
+          <td>FOREX</td>
+          <td>
+            <select name="ORDER_TYPE18">
+              <option value="Market">Market Order</option>
+              <option value="Limit">Limit Order</option>
+            </select>
+          </td>
+          <td>
+            <label class="switch"><input type="checkbox" name="TRADING18" {% if s.trade == 'on' %} checked {% endif %}>
+              <span class="slider round"></span>
+            </label>
+          </td>
+          {% endif %}  
+        {% endfor %}
+      </tr>
+
+
+                  
+
+
+
+                    </tbody>
+                    <td><button type="submit">Update</button></td>
+                  </table>
+                </form>
+              </div>
+            </div>
+          {% comment %} </div> {% endcomment %}
+        {% comment %} </div>
+      </div> {% endcomment %}
+    </div>
+
+
+
+    {% if error %}
+    <script>
+      alert('{{ error }}');
+    </script>
+    {% endif %}
+
+
+
+
+    {% if error == "no" %}
+    <script>
+      alert('Quantity add Successful');
+      window.location = ('{% url 'client_dashboard' %}');
+    </script>
+    {% endif %}
+    {% if error == "yes" %}
+    <script>
+      alert('Invalid Add Credentials, Try Again...');
+    </script> 
+    {% endif %} 
+
+    {% endblock %}

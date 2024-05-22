@@ -1,0 +1,29 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+
+ 
+<div class="content">
+    <div class="row">
+      <div class="col-sm md lg xl xxl-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Client Symbol Quantity List</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive table-container"> <!-- Add the table-container class here -->
+                <h1>Edit Client Symbol Quantity</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

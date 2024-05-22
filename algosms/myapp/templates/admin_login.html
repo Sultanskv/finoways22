@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<div{% if message.tags %} {% endif %} class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
+<style>
+  .list-group-item{
+      padding: 8px !important;
+  }
+  
+  .list-group{
+    text-align: center;
+  }
+  .list-group-item{
+    transition: background-color 0.3s ease;
+    height: 60px;
+  }
+  .list-group-item:hover {
+    background-color: #e9ecef; /* Change the background color on hover */
+  }
+  .col-sm-2{
+    border-solid: 2px;
+  }
+  .sidebar{
+      background-color: #f8f9fa; /* Change background color as needed */
+      padding: 20px; /* Adjust padding as needed */
+      height: 100vh; /* Make the sidebar full height */
+      position: sticky; /* Stick the sidebar */
+      top: 0; /* Stick the sidebar to the top */
+      border-right: 1px solid #dee2e6; /* Add a border on the right side */
+      overflow-y: auto;
+  }
+  .fa-house-user{
+    font-size: 20px;
+    color: skyblue;
+    margin: 6px;
+
+  }
+  .fa-signal{
+    font-size: 20px;
+    color: skyblue;
+    text-align: center;
+    margin:6px;
+  }
+  .fa-files{
+    font-size: 20px;
+    color: skyblue;
+    text-align: center;
+    margin: 6px;
+  }
+  .fa-handshake-angle{
+    font-size: 20px;
+    color: skyblue;
+    text-align: center;
+    mar: 6px; 
+  }
+  .fa-user-lock{
+    font-size: 20px;
+    color: skyblue;
+    text-align: center;
+    margin: 6px;
+  }
+  .fa-solid fa-lock-a{
+      font-size: 20px;
+      color: skyblue;
+      text-align: center;
+      margin: 6px; 
+  }
+ 
+</style>
+<div class="jumbotron" style="width: 40%;text-align: center;margin: 75px auto;">
+    <h1 class="display-6">Login As Admin!</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="username">Admin username</label>
+          <input type="text" name="username" class="form-control" placeholder="Enter username">
+          {% comment %} {{form.user_id}} {% endcomment %}
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" name="pwd" class="form-control" placeholder="Enter password">
+          {% comment %} {{form.password}} {% endcomment %}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+</div>
+
+
+{% if error == "no" %}
+<script>
+  alert('Logged In Successful');
+  window.location = ('{% url 'admin_dashboard' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+  alert('Invalid Login Credentials, Try Again...');
+</script> 
+{% endif %}
+
+{% endblock %}

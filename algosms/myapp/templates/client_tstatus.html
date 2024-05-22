@@ -1,0 +1,59 @@
+{% extends 'client_base.html' %}
+
+{% block main %}
+<script>
+  new DataTable('#example', {
+    layout: {
+        topStart: {
+            buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+        }
+    }
+});
+</script>
+ 
+<div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Trading Status</h4>
+          </div>
+          <div class="card-body">
+            {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+              {{ error_message }}
+            </div>
+            {% endif %}
+            <div class="table-responsive table-container">
+              <table class="table tablesorter table-bordered" id="example">
+                <thead class="text-white bg-black">
+                  <tr>
+                    <th>NO.</th>
+                    <th>TIME</th>
+                    <th>SERVICE-NAME</th>
+                    <th>TRADING</th>
+                    <th>IP-ADDRESS</th>
+                    <th>ORDER-TYPE</th>
+                    <th>UPDATED-BY</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                      <td>1</td> <!-- Replace with appropriate data -->
+                      <td>{{ current_time }}</td> <!-- Replace with appropriate data -->
+                      <td>{{ service_name }}</td> <!-- Replace with appropriate data -->
+                      <td>{{ trading }}</td> <!-- Replace with appropriate data -->
+                      <td>{{ client_ip }}</td> <!-- Display client's IP address -->
+                      <td>{{ order_type }}</td> <!-- Replace with appropriate data -->
+                      <td>{{ updated_by }}</td> <!-- Replace with appropriate data -->
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

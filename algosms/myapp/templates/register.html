@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+  function checkpassword()
+  {
+   if(document.signup.pwd.value!=document.signup.cpwd.value)
+   {
+    alert('Password and Repeat Password field does not match');
+    document.signup.cpwd.focus();
+    return false;
+   }
+   return true;
+  }
+</script>  
+
+<div class="card-shodow m-5">
+   <div class ="card=body">
+      <h5 class="p-2" style="border-bottom : 2px solid orange">Create an Account</h5>
+      {% if msg %}
+      <h4 style="color: red;text-align:center;">{{msg}}</h4>
+      {% endif %}  
+
+      <div class = "container-fluid">
+        <form method="post" name="signup" >
+          {%csrf_token %}
+          <div class="form-row">
+            {% comment %} <div class="col-sm-6">
+             <div class="form-group">
+                <label>client</label>
+                <input type="text" name="client" class="form-control" required placeholder="Enter clientname">
+             </div>
+            </div>  {% endcomment %}
+
+            <div class="col-md-6">
+              <div class="form-group">
+                 <label>first name</label>
+                 <input type="text" name="fname" class="form-control" required placeholder="Enter firstname">
+              </div>
+             </div>
+
+             <div class="col-md-6">
+              <div class="form-group">
+                 <label>last name</label>
+                 <input type="text" name="lname" class="form-control" required placeholder="Enter last name">
+              </div>
+             </div>
+
+             <div class="col-md-6">
+              <div class="form-group">
+                 <label>Phone number</label>
+                 <input type="Phone" name="mobile" class="form-control" required placeholder="Enter mobile no">
+              </div>
+             </div>
+
+             <div class="col-sm-6">
+              <div class="form-group">
+                 <label>EmailID</label>
+                 <input type="email" name="email" class="form-control" required placeholder="Enter email">
+              </div>
+             </div>
+
+             <div class="col-sm md lg xl xxl-6">
+              <div class="form-group">
+                <label for="fromdate">From Date:</label>
+                <input type="datetime-local" id="fromdate" name="fromdate" required class="form-control">
+              </div>
+             </div>
+
+             
+             <div class="col-md-6">
+              <div class="form-group">
+                <label for="todate">To Date:</label>
+                <input type="datetime-local" id="todate" name="todate" required class="form-control">
+              </div>
+             </div>
+
+             <div class="col-md-6">
+              <div class="form-group">
+                <label for="pwd">Password:</label>
+                <input type="password" id="pwd" name="pwd" required class="form-control" placeholder="Enter password">
+              </div>
+             </div>
+
+             <div class="col-md-6">
+              <div class="form-group">
+                <label for="cpwd">Confirm Password:</label>
+                <input type="password" id="cpwd" name="cpwd" required class="form-control" placeholder="Enter password again" >
+              </div>
+             </div>
+
+          </div>
+          <br>
+          <input type="submit" value="submit" onsubmit="return checkpassword()" class=" m-2 px-3 btn btn-primary">
+        </form>
+      </div>
+   </div>
+</div>
+
+{% if error == "no" %}
+<script>
+  alert('Registrations Successful');
+  window.location = ('{% url '/' %}'); 
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+  alert('Something went wrong , Try Again...');
+</script> 
+
+{% endif %}
+
+
+{% endblock %}

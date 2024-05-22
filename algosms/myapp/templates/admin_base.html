@@ -1,0 +1,119 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <title>admin panel</title>
+    {% comment %} bootstrap datatable with export buttons {% endcomment %}
+    <script src= "https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>                  
+    <script src= "https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.js"></script>
+    <script src= "https://cdn.datatables.net/buttons/3.0.2/js/buttons.dataTables.js"></script>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src= "https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>       
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.6/css/dataTables.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css">
+
+    <style>
+      .list-group-item {
+        padding: 8px !important;
+        display: flex;
+        align-items: center;
+    }
+    
+    .list-group {
+        text-align: center;
+    }
+
+    .list-group-item {
+        transition: background-color 0.3s ease;
+        height: 60px;
+    }
+
+    .list-group-item:hover {
+        background-color: #e9ecef; /* Change the background color on hover */
+    }
+
+    .col-sm-2 {
+        border-solid: 2px;
+    }
+
+    .sidebar {
+        background-color: #f8f9fa; /* Change background color as needed */
+        padding: 20px; /* Adjust padding as needed */
+        height: 100vh; /* Make the sidebar full height */
+        position: sticky; /* Stick the sidebar */
+        top: 0; /* Stick the sidebar to the top */
+        border-right: 1px solid #dee2e6; /* Add a border on the right side */
+        overflow-y: auto;
+    } 
+        
+        .icon {
+          margin-right: 10px; /* Space between icon and text */
+          font-size: 1.2rem; /* Adjust icon size */
+      }
+    </style>
+  </head>
+  <body style="height: 100%;background-color: #c5c5ff6e;">
+    
+      <div class="container-fluid">
+       <div class="row">  
+        <div class="col-sm-2 p-0 sidebar">
+          <center><img src="{% static 'finowayslogo.png' %}" width="250" height="250" class="img-thumbnail rounded-circle my-3" style="border: 2px solid transparent; transition: border-color 0.3s; background-color: #fff;" onmouseover="this.style.borderColor='#007bff'; this.style.backgroundColor='#f0f0f0';" onmouseout="this.style.borderColor='transparent'; this.style.backgroundColor='#fff';"></center>
+
+            {% comment %} list-group-item-warning {% endcomment %}
+            <div class="list-group">
+              <a href="{% url 'admin_dashboard' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/admin_dashboard/' %} active {% endif %}">
+                  <span class="icon">&#127968;</span> Dashboard
+              </a>
+              <a href="{% url 'admin_message' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/admin_message/' %} active {% endif %}">
+                  <span class="icon">&#9993;</span> Message
+              </a>
+              <a href="{% url 'admin_signals' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/admin_signals/' %} active {% endif %}">
+                  <span class="icon">&#128161;</span> Signals
+              </a>
+              <a href="{% url 'admin_thistory' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/admin_thistory/' %} active {% endif %}">
+                  <span class="icon">&#128202;</span> Trade History
+              </a>
+              <a href="{% url 'admin_tstatus'  %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/admin_tstatus/' %} active {% endif %}">
+                  <span class="icon">&#128200;</span> Trading Status
+              </a>
+              <a href="{% url 'client_list' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/clientlist/' %} active {% endif %}">
+                  <span class="icon">&#128101;</span> Client List
+              </a>
+              <a href="{% url 'admin_help_center' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/admin_help_center/' %} active {% endif %}">
+                  <span class="icon">&#10067;</span> Help Center
+              </a>
+              <a href="{% url 'Settings' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/settings/' %} active {% endif %}">
+                  <span class="icon">&#9881;</span> Settings
+              </a>
+              <a href="{% url 'logoutAdmin' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/adminlogout/' %} active {% endif %}">
+                  <span class="icon">&#128682;</span> Logout
+              </a>
+          </div>
+        </div>
+        {% comment %} container start {% endcomment %}
+        <div class="col-sm-10 p-2">
+            <div class="container-fluid p-2">
+                 <h5 class="text-center p-3 font-weight-bold" style="border-top : 2px solid green; border-bottom : 2px solid green">Admin </h5>
+                <div class="card shadow" style="min-height: 89vh">
+                    <div class="card-body">
+                    {% block main %}
+
+                    {% endblock %} 
+                    </div>
+                </div>
+                </div>
+         </div>
+
+
+       </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  </body>
+</html>

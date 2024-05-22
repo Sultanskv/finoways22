@@ -1,0 +1,351 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Finoways</title>
+  <style>
+    .list-group-item {
+      padding: 8px !important;
+      background-color: black;
+      color: gold;
+      border: 1px solid rgb(0, 0, 0);
+      font-size: larger;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .list-group {
+      text-align: left;
+    }
+
+    .list-group-item:hover {
+      background-color: gold;
+      color: black;
+    }
+
+    .sidebar {
+      background-color: black;
+      padding: 20px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      background: linear-gradient(to bottom right, #000000, #000000);
+      box-shadow: 0px 0px 10px rgb(243 194 15 / 30%);
+      transform: perspective(1000px) rotateY(5deg);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar img {
+      background-color: black;
+      padding: 10px;
+      border-color: #000;
+    }
+
+    .fa-house-user,
+    .fa-signal,
+    .fa-history,
+    .fa-chart-line,
+    .fa-handshake-angle,
+    .fa-user-lock,
+    .fa-lock {
+      font-size: 20px;
+      color: gold;
+      margin: 6px;
+    }
+
+    .navbar-custom {
+      background-color: black;
+      margin-top: auto;
+      margin-bottom: auto;
+      box-shadow: 0 4px 8px rgba(245, 222, 74, 0.5);
+    }
+
+    .navbar-custom .navbar-brand {
+      color: gold;
+    }
+
+    .navbar-custom .navbar-nav .nav-link {
+      color: gold;
+    }
+
+    .navbar-custom .nav-item.active .nav-link,
+    .navbar-custom .nav-item:hover .nav-link {
+      color: black;
+      background-color: gold;
+      border-radius: 5px;
+    }
+
+    .card {
+      background-color: #000;
+      box-shadow: 0 0 20px rgba(245, 222, 74, 0.5);
+    }
+    .card-custom {
+      margin-top: 20px;
+      background-color: black;
+      color: gold;
+      box-shadow: 0 0 20px rgba(245, 222, 74, 0.5);
+    }
+
+    .card-custom .card-header {
+      background-color: #d1c391;
+      color: black;
+      border-bottom: 1px solid black;
+    }
+
+    .card-custom .card-body {
+      background-color: #242424;
+      color: gold;
+    }
+
+    .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #ffffff;
+      font-size: large;
+    }
+
+    .card-custom .card-footer {
+      background-color: gold;
+      color: black;
+      border-top: 1px solid black;
+    }
+
+    .power-button {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      background-color: rgb(255, 6, 6);
+      border: black;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 10px;
+      transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .power-button.on {
+      background-color: rgb(65, 227, 36);
+      animation: pulse 1s infinite;
+      box-shadow: 0 0 15px gold;
+    }
+
+    .power-button i {
+      color: rgb(0, 0, 0);
+      font-size: 32px;
+    }
+
+    .power-button-text {
+      font-size: 25px;
+      color: gold;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .navbar-custom .nav-link i {
+      font-size: 24px;
+      color: gold;
+    }
+
+    body {
+      background-color: #1c1c1c;
+      color: gold;
+    }
+
+    .modal-content {
+      background-color: #000;
+      color: gold;
+      border: 1px solid gold;
+    }
+
+    .modal-header .close {
+      color: gold;
+    }
+
+    .navbar-custom {
+      background: linear-gradient(to right, #000000, #333333);
+      box-shadow: 0 4px 8px rgba(245, 222, 74, 0.5);
+      transform: perspective(1000px) rotateX(3deg);
+      transition: transform 0.3s ease;
+    }
+
+    .navbar-custom:hover {
+      transform: perspective(1000px) rotateX(0deg);
+    }
+
+    .navbar-custom .navbar-brand,
+    .navbar-custom .navbar-nav .nav-link {
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-custom {
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-custom:hover {
+      transform: translateY(-5px);
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #000000, #000000);
+      background-size: cover;
+      color: gold;
+    }
+
+    .sidebar:hover {
+      transform: perspective(1000px) rotateY(0deg);
+    }
+
+    .list-group-item {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .list-group-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .list-group-item i {
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body style="height: 100%;background-color: #000;">
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-2 p-0 sidebar">
+        <center><img src="{% static 'finowayslogo.png' %}" width="250" height="250"
+            class="img-thumbnail rounded-circle my-3"></center>
+        <div class="list-group">
+          <a href="{% url 'client_dashboard' %}"
+            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/dashboard/' %} active {% endif %}"><i
+              class="fa-solid fa-house-user"></i>DASHBOARD</a>
+          <a href="{% url 'client_signals' %}"
+            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/signals/' %} active {% endif %}"><i
+              class="fa-solid fa-signal"></i>SIGNALS</a>
+          <a href="{% url 'client_trade_history' %}"
+            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/tradehistory/' %} active {% endif %}"><i
+              class="fa-solid fa-history"></i>TRADE HISTORY</a>
+          <a href="{% url 'client_tstatus' %}"
+            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/tradingstatus/' %} active {% endif %}"><i
+              class="fa-solid fa-chart-line"></i>TRADING STATUS</a>
+          <a href="{% url 'client_help_center' %}"
+            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/client_help_center/' %} active {% endif %}"><i
+              class="fa-solid fa-handshake-angle"></i> HELP CENTER</a>
+        </div>
+      </div>
+      <div class="col-sm-10 p-2">
+        <div class="container-fluid p-2">
+          <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+            <div class="power-button" id="powerButton">
+              <i class="fa fa-power-off"></i>
+            </div>
+            <span class="power-button-text">Connect With Broker</span>
+            <div class="ml-auto d-flex align-items-center">
+              <a class="nav-link" href="#"><i class="fa-solid fa-bell"></i></a>
+              <a class="nav-link" href="#" data-toggle="modal" data-target="#profileModal"><i
+                  class="fa-solid fa-user-circle"></i></a>
+            </div>
+          </nav>
+          <div class="card shadow card-custom" style="min-height: 89vh">
+            <div class="card-body">
+              {% block main %}
+              {% endblock %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content bg-dark text-gold">
+        <div class="modal-header">
+          <h5 class="modal-title" id="profileModalLabel">Profile</h5>
+          <button type="button" class="close text-gold" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Name:</strong> {{ client_user.name_first }} {{client_user.name_last}}</p>
+          <p><strong>Email:</strong> {{ client_user.email }}</p>
+          <p><strong>Mobile:</strong> {{ client_user.phone_number }}</p>
+          <!-- Assuming you have a user profile with mobile number -->
+        </div>
+        <div class="modal-footer">
+          <a href="{% url 'change_password' %}" class="btn btn-warning">Change Password</a>
+          <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
+
+  <script>
+    // JavaScript to handle button functionality
+    const powerButton = document.getElementById('powerButton');
+
+    // Check if the power button was previously turned on
+    const isPowerOn = localStorage.getItem('powerOn');
+
+    // Update button state based on previous state
+    if (isPowerOn === 'true') {
+      powerButton.classList.add('on');
+      powerButton.style.backgroundColor = 'Green';
+    }
+
+    powerButton.addEventListener('click', function () {
+      if (powerButton.classList.contains('on')) {
+        // Turn off
+        powerButton.classList.remove('on');
+        powerButton.style.backgroundColor = 'red';
+        // Remove state from local storage when turning off
+        localStorage.removeItem('powerOn');
+      } else {
+        // Turn on
+        powerButton.classList.add('on');
+        powerButton.style.backgroundColor = 'red';
+        // Store state in local storage when turning on
+        localStorage.setItem('powerOn', 'true');
+        // Redirect to URL when turning on
+        window.location.href = "{% url 'multibank' %}";
+      }
+    });
+  </script>
+</body>
+
+</html>

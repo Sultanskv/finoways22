@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  /* Base styles */
+  .jumbotron {
+    text-align: center;
+    margin: 75px auto;
+    box-shadow: 0 0 20px rgba(245, 222, 74, 0.5); /* Golden shadow effect */
+    border-radius: 15px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    width: 40%;
+    background-color: #000;
+    color: #ffd700; /* Golden color */
+    padding: 30px;
+  }
+
+  .jumbotron:hover {
+    box-shadow: 0 0 20px rgba(245, 222, 74, 0.5);
+    transform: scale(1.05);
+  }
+
+  .jumbotron img {
+    max-width: 200px; /* Increased max width */
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-control {
+    border-radius: 20px;
+    background-color: #222;
+    border: 1px solid #ffd700;
+    color: #ffd700;
+  }
+
+  .form-control::placeholder {
+    color: #ffd700;
+  }
+
+  .form-control:focus {
+    background-color: #020202;
+    border-color: #ffcc00;
+    color: #ffd700;
+  }
+
+  .btn-primary {
+    background-color: #ffd700;
+    border: none;
+    color: #000;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #ffcc00;
+    transform: scale(1.05);
+  }
+
+  .form-text {
+    color: #ffd700;
+  }
+
+  .alert {
+    background-color: #000;
+    border: 1px solid #ffd700;
+    color: #ffd700;
+  }
+
+  .error-message {
+    color: #ff0000;
+  }
+  .h1, h1 {
+    font-size: 1.5rem;
+}
+
+  .h3, h3 {
+    font-size: 1rem;
+}
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .jumbotron {
+      width: 80%;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .jumbotron {
+      width: 90%;
+    }
+  }
+
+  a {
+    color: #ffd700;
+  }
+
+  a:hover {
+    color: #ffcc00;
+  }
+</style>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
+<div class="jumbotron">
+    <img src="{% static 'finowayslogo.png' %}" alt="Logo"> <!-- Add your logo path here -->
+    <h1 class="display-6">Login As Client!</h1>
+    {% if msg %}
+    <p style='color: red;'>{{ msg }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="user_id">EmailID</label>
+          <input type="email" name="email" class="form-control" placeholder="Enter emailid">
+          <small id="emailHelp" class="form-text text-muted"></small>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Enter password">
+        </div>
+        <button type="submit" class="btn btn-primary" style='width: 100%;'>Login</button>
+    </form>
+
+
+    <h3><a href="/changepassword/">Forgot Password</a></h3>
+</div>
+
+{% if error == "no" %}
+<script>
+  alert('Logged In Successfully');
+  window.location = ('{% url 'client_dashboard' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+  alert('Invalid Login Credentials, Try Again...');
+</script>
+{% endif %}
+
+{% endblock %}

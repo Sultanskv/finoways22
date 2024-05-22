@@ -1,0 +1,93 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+
+ 
+<div class="card-shodow m-5">
+   <div class ="card=body">
+      <h5 class="p-2" style="border-bottom : 2px solid orange">Create an Message</h5>
+
+      <div class = "container-fluid">
+        <form method="post" name="signup" onsubmit = "return checkpassword()">
+          {%csrf_token %}
+          <div class="form-row">
+        
+            <div class="col-sm md lg xl xxl-6">
+              <div class="form-group">
+                    <label for="symbol">Symbol</label>
+                    <select class="form-control" name="symbol" id="symbol" required>
+                      <option value="">Select an option</option>
+                      {% for symbol in symbols %}
+                        <option value="{{ symbol.SYMBOL }}">{{ symbol.SYMBOL }}</option>
+                      {% endfor %}
+                    </select>
+              </div>
+             </div>
+
+
+             <div class="col-md-6">
+              <div class="form-group">
+                <label for="type">Type</label>
+                <select class="form-control" name="type" id="type" required>
+                  <option value="BUY">Select options</option>  
+                  <option value="BUY_ENTRY">BUY_ENTRY</option>
+                  <option value="BUY_EXIT">BUY_EXIT</option>
+                  <option value="SELL_ENTRY">SELL_ENTRY</option>
+                  <option value="SELL_EXIT">SELL_EXIT</option>
+                </select>
+              </div>
+             </div>
+
+             <div class="col-md-12">
+              <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" class="form-control price-input" name="quantity" id="quantity" placeholder="Quantity">
+              </div>
+             </div>
+
+             <div class="col-md-6">
+              <div class="form-group">
+                <label for="entry_price">Entry Price</label>
+                <input type="number" class="form-control price-input" step="0.00001" name="entry_price" id="entry_price"  placeholder="Entry Price">
+              </div>
+             </div>
+
+             <div class="col-md-6">
+              <div class="form-group">
+                <label for="exit_price">Exit Price</label>
+                <input type="number" class="form-control price-input" step="0.00001" name="exit_price" id="exit_price" placeholder="Exit Price">
+              </div>
+             </div>
+
+             
+            {% comment %} <div class="col-sm-6">
+              <div class="form-group">
+                <label for="todate">Date & Time:</label>
+                <input type="datetime-local" id="todate" name="todate" required class="form-control">
+              </div>
+             </div>  {% endcomment %}
+
+
+          </div>
+          <br>
+          <input type="submit" value="submit" onsubmit="return checkpassword()" class=" m-2 px-3 btn btn-primary">
+        </form>
+      </div>
+   </div>
+</div>
+
+{% if error == "no" %}
+<script>
+  alert('Message Send Successful');
+  window.location = ('{% url 'admin_signals' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+  alert('Something went wrong , Try Again...');
+</script> 
+
+{% endif %}
+
+
+{% endblock %}

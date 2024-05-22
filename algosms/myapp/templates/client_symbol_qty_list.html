@@ -1,0 +1,29 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+
+ 
+<div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Client Symbol Quantity List</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive table-container"> <!-- Add the table-container class here -->
+                <h1>Client Symbol Quantity List</h1>
+                <ul>
+                    {% for item in client_symbol_qty %}
+                    <li>{{ item.SYMBOL }} - {{ item.QUANTITY }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

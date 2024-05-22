@@ -1,0 +1,128 @@
+{% extends 'admin_base.html' %}
+
+{% block main %}
+<style>
+    .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 15px;
+    }
+    
+    .left {
+        flex: 1;
+    }
+    
+    .right {
+        flex: 1;
+        text-align: right;
+    }
+    .td{
+        text-align:center;
+    }
+</style>
+
+<div class="form-row">
+    <div class="col-sm md lg xl xxl-3">
+        <div class="form-group" style="max-width: 300px; margin: auto; text-align:center;">
+          <label for="type" style="text-align:center;">Client Type</label>
+          <select class="form-control" name="type" id="type" style="border-radius: 50px; padding: 10px; margin-bottom: 10px; transition: border-color 0.3s, box-shadow 0.3s; text-align:center;" required >
+            <option value="All">All</option>  
+            <option value="Demo">Demo</option>
+            <option value="Live">Live</option>
+          </select>
+        </div>
+       </div>
+
+       <div class="col-sm md lg xl xxl-3">
+        <div class="form-group" style="max-width: 300px; margin: auto; text-align:center;">
+          <label for="type" style="text-align:center;">Trading On/Off</label>
+          <select class="form-control" name="type" id="type" style="border-radius: 50px; padding: 10px; margin-bottom: 10px; transition: border-color 0.3s, box-shadow 0.3s; text-align:center;" required>
+            <option value="All">All</option>  
+            <option value="BUY_ENTRY">On</option>
+            <option value="BUY_EXIT">Off</option>
+          </select>
+        </div>
+       </div>
+
+       <div class="col-sm md lg xl xxl-3">
+        <div class="form-group" style="max-width: 300px; margin: auto; text-align: center;">
+          <label for="type">Strategy Client</label>
+          <select class="form-control" name="type" id="type" style="border-radius: 50px; padding: 10px; margin-bottom: 10px; transition: border-color 0.3s, box-shadow 0.3s; text-align:center;" required>
+            <option value="All">All</option>  
+            <option value="Demo">Demo</option>
+            <option value="Proton1">Proton1</option>
+          </select>
+        </div>
+       </div>
+</div>
+
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm md lg xl xxl-12">
+            <div class="card">
+                <div class="card-header row">
+                    <h4 class="card-title">Client List</h4>
+                    <a href="{% url 'registration' %}" class="btn btn-primary">Add New Client</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive table-container">
+                        <table class="table tablesorter table-bordered" id="example">
+                            <thead class="text-primary bg-secondary">
+                                <tr>
+                                    <th style="width: 20px;">Id</th>
+                                    <th style="width: 100px;">user_id</th>
+                                    <th style="width: 150px;">name_first</th>
+                                    <th style="width: 150px;">name_last</th>
+                                    <th style="width: 200px;">email</th>
+                                    <th style="width: 100px;">password</th>
+                                    <th style="width: 150px;">phone_number</th>
+                                    <th style="width: 100px;">verify_code</th>
+                                    <th style="width: 200px;">date_joined</th>
+                                    <th style="width: 200px;">last_login</th>
+                                    <th style="width: 80px;">is_staff</th>
+                                    <th style="width: 150px;">clint_status</th>
+                                    <th style="width: 100px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for clients in clientdetail %}
+                                <tr>
+                                    <td style="width: 20px;">{{ clients.id }}</td>
+                                    <td style="width: 100px;">{{ clients.user_id }}</td>
+                                    <td style="width: 150px;">{{ clients.name_first }}</td>
+                                    <td style="width: 150px;">{{ clients.name_last }}</td>
+                                    <td style="width: 200px;">{{ clients.email }}</td>
+                                    <td style="width: 100px;">{{ clients.password }}</td>
+                                    <td style="width: 150px;">{{ clients.phone_number }}</td>
+                                    <td style="width: 100px;">{{ clients.verify_code }}</td>
+                                    <td style="width: 200px;">{{ clients.date_joined }}</td>
+                                    <td style="width: 200px;">{{ clients.last_login }}</td>
+                                    <td style="width: 80px;">{{ clients.is_staff }}</td>
+                                    <td style="width: 150px;">{{ clients.Action }}</td>
+                                    <td style="display: flex;">
+                                        <div style="order: 1; margin-right: 10px;">
+                                            <a href="{% url 'update_client' user_id=clients.user_id %}" class="btn btn-primary">Update</a>
+                                        </div>
+                                        <div style="order: 2;">
+                                            <form action="{% url 'delete_client' clients.user_id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger" style="margin-left: 10px;">Delete</button>
+                                            </form>
+                                        </div>
+                                    </td>                                           
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
