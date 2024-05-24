@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from myapp import views
 from django.contrib.auth import views as auth_views
+# from .views import client_dashboard, multibank_login, multibank_login_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -82,5 +83,6 @@ urlpatterns = [
     path('client_help_center/', views.client_help_center, name='client_help_center'),
     path('admin_help_center/', views.admin_help_center, name='admin_help_center'),
 
-      
+    path('Analysis/',views.Analysis, name='Analysis'),
+
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

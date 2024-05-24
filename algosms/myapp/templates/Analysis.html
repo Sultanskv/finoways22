@@ -1,0 +1,125 @@
+{% extends "client_base.html" %}
+
+{% block main %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Forex Table Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .dashboard {
+            background-color: #1a1a1a;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px #ffd700;
+            width: 90%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+        }
+        .section {
+            background-color: #1a1a1a;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 10px #ffd700;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #ffd700;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ffd700;
+        }
+        th {
+            background-color: #333;
+            color: #ffd700;
+        }
+        td {
+            background-color: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="section">
+            <h2>Currency Pairs</h2>
+            <table id="forex-table">
+                <thead>
+                    <tr>
+                        <th>Currency Pair</th>
+                        <th>Exchange Rate</th>
+                        <th>Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2>Analysis 1</h2>
+            <p>Analysis content goes here. You can add charts, graphs, or textual analysis.</p>
+        </div>
+        <div class="section">
+            <h2>Analysis 2</h2>
+            <p>Analysis content goes here. You can add charts, graphs, or textual analysis.</p>
+        </div>
+        <div class="section">
+            <h2>Exchange Rate Trends</h2>
+            <p>Trends content goes here. You can display historical data, trend charts, etc.</p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchForexData() {
+            const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+            const data = await response.json();
+            const tableBody = document.getElementById('forex-table').getElementsByTagName('tbody')[0];
+
+            // Clear existing rows
+            tableBody.innerHTML = '';
+
+            for (const [pair, rate] of Object.entries(data.rates)) {
+                const row = tableBody.insertRow();
+                const cellPair = row.insertCell(0);
+                const cellRate = row.insertCell(1);
+                const cellChange = row.insertCell(2);
+
+                cellPair.textContent = `USD/${pair}`;
+                cellRate.textContent = rate.toFixed(4);
+                cellChange.textContent = (Math.random() * 2 - 1).toFixed(2) + '%'; // Mock change value
+                cellChange.style.color = cellChange.textContent.includes('-') ? 'red' : 'green';
+            }
+        }
+
+        // Fetch data initially and then every minute
+        fetchForexData();
+        setInterval(fetchForexData, 60000);
+    </script>
+</body>
+</html>
+
+{% endblock %}

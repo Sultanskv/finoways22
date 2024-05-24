@@ -243,6 +243,9 @@
         <center><img src="{% static 'finowayslogo.png' %}" width="250" height="250"
             class="img-thumbnail rounded-circle my-3"></center>
         <div class="list-group">
+          <a href="{% url 'Analysis' %}"
+          class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/Analysis/' %} active {% endif %}"><i
+            class="fa-solid fa-chart-line"></i>ANALYSIS</a>
           <a href="{% url 'client_dashboard' %}"
             class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/dashboard/' %} active {% endif %}"><i
               class="fa-solid fa-house-user"></i>DASHBOARD</a>

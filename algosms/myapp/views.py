@@ -12,6 +12,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.decorators import login_required,user_passes_test
 from datetime import datetime, timedelta
+from decimal import Decimal
+from django.utils.dateparse import parse_date
 # Create your views here.
 my_global_variable = None
 def index(request):
@@ -101,7 +103,7 @@ def client_login(request):
                             )
                             
 
-                    return redirect('/dashboard/')
+                    return redirect('/Analysis/')
                 else:
                     return redirect('/?msg=your plane is expire')  
                 
@@ -356,94 +358,184 @@ def admin_message(request):
     d = request.session.get('message_id')
     if request.method == "POST":
         if request.user.is_authenticated:
-            client_signals = ClientSignal.objects.filter( message_id = d , ids = 'No')
+            client_signals = ClientSignal.objects.filter(message_id=d, ids='No')
             
             user = request.user
             symbol_name = request.POST['symbol']  # Get the symbol name from the form
             sy = get_object_or_404(SYMBOL, SYMBOL=symbol_name)  # Fetch the corresponding SYMBOL instance
-            # sy = request.POST['symbol']
             ty = request.POST['type']
-         
             qty_str = request.POST['quantity']
          
             if ty == 'BUY_EXIT' or ty == 'SELL_EXIT':
-                    for client_signal in client_signals:
-                        print('test for ')
-                        if qty_str.strip():  # Check if quantity string is not empty or only whitespace
-                            qty = float(qty_str)
-                        elif ty == 'BUY_EXIT':
-                            qty = client_signal.QUANTITY     
-                            enp = client_signal.ENTRY_PRICE
-                            exp = float(request.POST['exit_price'])
-
-                        elif ty == 'SELL_EXIT':
-                            qty = client_signal.QUANTITY     
-                            enp = client_signal.ENTRY_PRICE
-                            exp = float(request.POST['exit_price'])    
-
-                        else:
-                            qty = 0 # Set qty to a default value or handle it according to your logic
-                            enp = float(request.POST['entry_price'])
-                            exp =  None
+                for client_signal in client_signals:
+                    if qty_str.strip():  # Check if quantity string is not empty or only whitespace
+                        qty = Decimal(qty_str)
+                    else:
+                        qty = Decimal(client_signal.QUANTITY)
                     
+                    enp = Decimal(client_signal.ENTRY_PRICE)
+                    exp = Decimal(request.POST['exit_price']) if 'exit_price' in request.POST else None
                     
-                        if ty == 'BUY_EXIT':
-                        #    print('BUY_EXIT')
-                            prloss = (float(exp) - float(enp)) * qty*100
-                            t = ClientSignal.objects.filter( TYPE = 'BUY_EXIT' , client_id = client_signal.client_id, created_at__date=current_date )
-                            total = 0
-                            for p in t:
-                                total += p.profit_loss
-                                print(total)
-                            
+                    if ty == 'BUY_EXIT':
+                        if symbol_name in ['XAUUSD','USTEC','NAS100']:
+                            prloss = (exp - enp) * qty * Decimal('100')
+                        elif symbol_name in ['USOIL', 'EURUSD', 'GBPUSD', 'AUDNZD', 'GBPNZD', 'USDCHF', 'GBPCAD', 'EURAUD', 'EURGBP', 'NZDUSD', 'USDCAD', 'AUDUSD']:        
+                            prloss = (exp - enp) * Decimal('100') * Decimal('10') * qty
+                        elif symbol_name in ['USDJPY', 'EURJPY', 'GBPJPY', 'AUDJPY']:        
+                            prloss = (exp - enp) * Decimal('100') * Decimal('6.39') * qty
                         
-                            total_pl = float(total) + float(prloss)
-                            print(total_pl)
+                        t = ClientSignal.objects.filter(TYPE='BUY_EXIT', client_id=client_signal.client_id, created_at__date=current_date)
+                        total = sum(Decimal(p.profit_loss) for p in t)
+                        total_pl = total + prloss
 
-                        elif ty == 'SELL_EXIT':
-                            print('SELL_EXIT')
-                            prloss = (float(enp) - float(exp)) * 100*qty
-                            t = ClientSignal.objects.filter( TYPE = 'SELL_EXIT' ,client_id = client_signal.client_id, created_at__date=current_date )
-                            total = 0
-                            for p in t:
-                                total += p.profit_loss
-                            #    print(total)
-                            
+                    elif ty == 'SELL_EXIT':
+                        if symbol_name in ['XAUUSD','USTEC','NAS100']:
+                            prloss = (enp - exp) * qty * Decimal('100')
+                        elif symbol_name in ['USOIL', 'EURUSD', 'GBPUSD', 'AUDNZD', 'GBPNZD', 'USDCHF', 'GBPCAD', 'EURAUD', 'EURGBP', 'NZDUSD', 'USDCAD', 'AUDUSD']:        
+                            prloss = (enp - exp) * Decimal('100') * Decimal('10') * qty    
+                        elif symbol_name in ['USDJPY', 'EURJPY', 'GBPJPY', 'AUDJPY']:        
+                            prloss = (enp - exp) * Decimal('100') * Decimal('6.39') * qty
                         
-                            total_pl = float(total) + float(prloss)
-                        #    print(total_pl)
+                        t = ClientSignal.objects.filter(TYPE='SELL_EXIT', client_id=client_signal.client_id, created_at__date=current_date)
+                        total = sum(Decimal(p.profit_loss) for p in t)
+                        total_pl = total + prloss
                             
-                    
-                            
-                        creat = ClientSignal.objects.create(user=user, SYMBOL=sy, TYPE=ty, QUANTITY=qty, 
-                                                    ENTRY_PRICE=enp, EXIT_PRICE=exp, profit_loss=prloss, 
-                                                    cumulative_pl=total_pl, created_at=timezone.now(),
-                                                    message_id = client_signal.message_id ,client_id  = client_signal.client_id )
-                
+                    ClientSignal.objects.create(
+                        user=user, SYMBOL=sy, TYPE=ty, QUANTITY=qty, 
+                        ENTRY_PRICE=enp, EXIT_PRICE=exp, profit_loss=prloss, 
+                        cumulative_pl=total_pl, created_at=timezone.now(),
+                        message_id=client_signal.message_id, client_id=client_signal.client_id
+                    )
 
             else:
-                    qty = 0 # Set qty to a default value or handle it according to your logic
-                    enp = float(request.POST['entry_price'])
-                    exp =  None
-                    prloss = None
-                    total_pl = None                                    
-                    if ty == 'BUY_ENTRY' or ty == 'SELL_ENTRY':
+                qty = Decimal('0')  # Set qty to a default value or handle it according to your logic
+                enp = Decimal(request.POST['entry_price'])
+                exp = None
+                prloss = None
+                total_pl = None
+                if ty == 'BUY_ENTRY' or ty == 'SELL_ENTRY':
+                    creat = ClientSignal.objects.create(
+                        user=user, SYMBOL=sy, admin='admin', TYPE=ty, QUANTITY=qty, 
+                        ENTRY_PRICE=enp, EXIT_PRICE=None, profit_loss=prloss, 
+                        cumulative_pl=total_pl, created_at=timezone.now()
+                    )
+                    i = generate_unique_id()
+                    creat.message_id = creat.id
+                    creat.ids = i 
+                    creat.save()      
+                    request.session['message_id'] = creat.id
+                    global my_global_variable
+                    my_global_variable = i
+                    error = "no"
+                    result = add_singnal_qty(request)
+
+    return render(request, 'admin_messages.html', {'symbols': symbols, 'error': error})
+
+
+# def admin_message(request):
+#     error = ""
+#     symbols = SYMBOL.objects.all()  # Fetch all SYMBOL objects
+#     user = request.user
+#     current_date = timezone.now().date()
+#     d = request.session.get('message_id')
+#     if request.method == "POST":
+#         if request.user.is_authenticated:
+#             client_signals = ClientSignal.objects.filter( message_id = d , ids = 'No')
+            
+#             user = request.user
+#             symbol_name = request.POST['symbol']  # Get the symbol name from the form
+#             sy = get_object_or_404(SYMBOL, SYMBOL=symbol_name)  # Fetch the corresponding SYMBOL instance
+#             # sy = request.POST['symbol']
+#             ty = request.POST['type']
+         
+#             qty_str = request.POST['quantity']
+         
+#             if ty == 'BUY_EXIT' or ty == 'SELL_EXIT':
+#                     for client_signal in client_signals:
+#                         print('test for ')
+#                         if qty_str.strip():  # Check if quantity string is not empty or only whitespace
+#                             qty = float(qty_str)
+#                         elif ty == 'BUY_EXIT':
+#                             qty = client_signal.QUANTITY     
+#                             enp = client_signal.ENTRY_PRICE
+#                             exp = float(request.POST['exit_price'])
+
+#                         elif ty == 'SELL_EXIT':
+#                             qty = client_signal.QUANTITY     
+#                             enp = client_signal.ENTRY_PRICE
+#                             exp = float(request.POST['exit_price'])    
+
+#                         else:
+#                             qty = 0 # Set qty to a default value or handle it according to your logic
+#                             enp = float(request.POST['entry_price'])
+#                             exp =  None
+                    
+                    
+#                         if ty == 'BUY_EXIT':
+#                         #    print('BUY_EXIT')
+#                             # Determine the formula based on the symbol and type
+#                             if symbol_name in ['XAUUSD', 'USOIL', 'EURUSD', 'GBPUSD', 'AUDNZD', 'GBPNZD', 'USDCHF', 'GBPCAD', 'EURAUD', 'AUDNZD', 'EURGBP', 'NZDUSD', 'USDCAD', 'AUDUSD']:
+#                                     prloss = (float(exp) - float(enp)) * qty*100
+#                             elif symbol_name in ['USDJPY', 'EURJPY', 'GBPJPY', 'AUDJPY']:        
+#                                     prloss = (exp - enp) * 100 * 6.39 * qty
+#                             t = ClientSignal.objects.filter( TYPE = 'BUY_EXIT' , client_id = client_signal.client_id, created_at__date=current_date )
+#                             total = 0
+#                             for p in t:
+#                                 total += p.profit_loss
+#                                 print(total)
+                            
                         
-                        creat = ClientSignal.objects.create(user=user, SYMBOL=sy, admin = 'admin',TYPE=ty, QUANTITY=qty, 
-                                                ENTRY_PRICE=enp, EXIT_PRICE=None, profit_loss=prloss, 
-                                                cumulative_pl=total_pl, created_at=timezone.now())
-                        i = generate_unique_id()
-                        creat.message_id = creat.id
-                        creat.ids = i 
-                        creat.save()      
-                        request.session['message_id'] = creat.id
-                    #    request.session['ids'] = i
-                        global my_global_variable
-                        my_global_variable = i
+#                             total_pl = float(total) + float(prloss)
+#                             print(total_pl)
+
+#                         elif ty == 'SELL_EXIT':
+#                             print('SELL_EXIT')
+#                             # Determine the formula based on the symbol and type
+#                             if symbol_name in ['XAUUSD', 'USOIL', 'EURUSD', 'GBPUSD', 'AUDNZD', 'GBPNZD', 'USDCHF', 'GBPCAD', 'EURAUD', 'AUDNZD', 'EURGBP', 'NZDUSD', 'USDCAD', 'AUDUSD']:
+#                                     prloss = (float(enp) - float(exp)) * qty*100
+#                             elif symbol_name in ['USDJPY', 'EURJPY', 'GBPJPY', 'AUDJPY']:        
+#                                     prloss = (enp - exp) * 100 * 6.39 * qty
+#                             t = ClientSignal.objects.filter( TYPE = 'SELL_EXIT' ,client_id = client_signal.client_id, created_at__date=current_date )
+#                             total = 0
+#                             for p in t:
+#                                 total += p.profit_loss
+#                             #    print(total)
+                            
                         
-                        error = "no"
-                        result = add_singnal_qty(request)
-    return render(request, 'admin_messages.html',{'symbols': symbols, 'error': error})
+#                             total_pl = float(total) + float(prloss)
+#                         #    print(total_pl)
+                            
+                    
+                            
+#                         creat = ClientSignal.objects.create(user=user, SYMBOL=sy, TYPE=ty, QUANTITY=qty, 
+#                                                     ENTRY_PRICE=enp, EXIT_PRICE=exp, profit_loss=prloss, 
+#                                                     cumulative_pl=total_pl, created_at=timezone.now(),
+#                                                     message_id = client_signal.message_id ,client_id  = client_signal.client_id )
+                
+
+#             else:
+#                     qty = 0 # Set qty to a default value or handle it according to your logic
+#                     enp = float(request.POST['entry_price'])
+#                     exp =  None
+#                     prloss = None
+#                     total_pl = None                                    
+#                     if ty == 'BUY_ENTRY' or ty == 'SELL_ENTRY':
+                        
+#                         creat = ClientSignal.objects.create(user=user, SYMBOL=sy, admin = 'admin',TYPE=ty, QUANTITY=qty, 
+#                                                 ENTRY_PRICE=enp, EXIT_PRICE=None, profit_loss=prloss, 
+#                                                 cumulative_pl=total_pl, created_at=timezone.now())
+#                         i = generate_unique_id()
+#                         creat.message_id = creat.id
+#                         creat.ids = i 
+#                         creat.save()      
+#                         request.session['message_id'] = creat.id
+#                     #    request.session['ids'] = i
+#                         global my_global_variable
+#                         my_global_variable = i
+                        
+#                         error = "no"
+#                         result = add_singnal_qty(request)
+#     return render(request, 'admin_messages.html',{'symbols': symbols, 'error': error})
 ########################
 
 ''' 
@@ -671,41 +763,46 @@ def client_dashboard(request):
             o11 = request.POST.get('ORDER_TYPE11')
             t11 = request.POST.get('TRADING11')
             print(q11,o11,t11)
-             # AUDNZD
+            # EURGBP
             q12 = request.POST.get('QUANTITY12')
             o12 = request.POST.get('ORDER_TYPE12')
             t12 = request.POST.get('TRADING12')
             print(q12,o12,t12)
-            # EURGBP
+            # NZDUSD
             q13 = request.POST.get('QUANTITY13')
             o13 = request.POST.get('ORDER_TYPE13')
             t13 = request.POST.get('TRADING13')
             print(q13,o13,t13)
-            # NZDUSD
+            # USDCAD
             q14 = request.POST.get('QUANTITY14')
             o14 = request.POST.get('ORDER_TYPE14')
             t14 = request.POST.get('TRADING14')
             print(q14,o14,t14)
-            # USDCAD
+            # AUDUSD
             q15 = request.POST.get('QUANTITY15')
             o15 = request.POST.get('ORDER_TYPE15')
             t15 = request.POST.get('TRADING15')
             print(q15,o15,t15)
-            # AUDUSD
+            # GBPJPY
             q16 = request.POST.get('QUANTITY16')
             o16 = request.POST.get('ORDER_TYPE16')
             t16 = request.POST.get('TRADING16')
             print(q16,o16,t16)
-            # GBPJPY
+            # AUDJPY
             q17 = request.POST.get('QUANTITY17')
             o17 = request.POST.get('ORDER_TYPE17')
             t17 = request.POST.get('TRADING17')
             print(q17,o17,t17)
-            # AUDJPY
+            # USTEC
             q18 = request.POST.get('QUANTITY18')
             o18 = request.POST.get('ORDER_TYPE18')
             t18 = request.POST.get('TRADING18')
             print(q18,o18,t18)
+             # NAS100
+            q19 = request.POST.get('QUANTITY19')
+            o19 = request.POST.get('ORDER_TYPE19')
+            t19 = request.POST.get('TRADING19')
+            print(q19,o19,t19)
             value = my_global_variable
             try:
                 
@@ -801,71 +898,79 @@ def client_dashboard(request):
                             q.save()    
                         else:
                             q.trade = t11 
-                            q.save()                
+                            q.save()                               
                     
-                    elif q.SYMBOL == 'AUDNZD':
+                    elif q.SYMBOL == 'EURGBP':
                         if t12 == 'on':
                             q.QUANTITY = float(q12)
                             q.trade = t12 
                             q.save()    
                         else:
                             q.trade = t12 
-                            q.save()               
+                            q.save()          
                     
-                    elif q.SYMBOL == 'EURGBP':
+                    elif q.SYMBOL == 'NZDUSD':
                         if t13 == 'on':
                             q.QUANTITY = float(q13)
                             q.trade = t13 
                             q.save()    
                         else:
                             q.trade = t13 
-                            q.save()          
-                    
-                    elif q.SYMBOL == 'NZDUSD':
+                            q.save()             
+
+                    elif q.SYMBOL == 'USDCAD':
                         if t14 == 'on':
                             q.QUANTITY = float(q14)
                             q.trade = t14 
                             q.save()    
                         else:
                             q.trade = t14 
-                            q.save()             
-
-                    elif q.SYMBOL == 'USDCAD':
+                            q.save()          
+                    
+                    elif q.SYMBOL == 'AUDUSD':
                         if t15 == 'on':
                             q.QUANTITY = float(q15)
                             q.trade = t15 
                             q.save()    
                         else:
                             q.trade = t15 
-                            q.save()          
-                    
-                    elif q.SYMBOL == 'AUDUSD':
+                            q.save() 
+                            
+                    elif q.SYMBOL == 'GBPJPY':
                         if t16 == 'on':
                             q.QUANTITY = float(q16)
                             q.trade = t16 
                             q.save()    
                         else:
                             q.trade = t16 
-                            q.save() 
-                            
-                    elif q.SYMBOL == 'GBPJPY':
+                            q.save()          
+                    
+                    elif q.SYMBOL == 'AUDJPY':
                         if t17 == 'on':
                             q.QUANTITY = float(q17)
                             q.trade = t17 
                             q.save()    
                         else:
                             q.trade = t17 
-                            q.save()          
+                            q.save()       
                     
-                    elif q.SYMBOL == 'AUDJPY':
+                    elif q.SYMBOL == 'USTEC':
                         if t18 == 'on':
                             q.QUANTITY = float(q18)
                             q.trade = t18 
                             q.save()    
                         else:
                             q.trade = t18 
-                            q.save()  
-                    
+                            q.save()
+                            
+                    elif q.SYMBOL == 'NAS100':
+                        if t19 == 'on':
+                            q.QUANTITY = float(q19)
+                            q.trade = t19 
+                            q.save()    
+                        else:
+                            q.trade = t19 
+                            q.save()        
                 return redirect('client_dashboard')
             except Exception as e:               
                 error = str(e)
@@ -1256,5 +1361,41 @@ def multibank(request):
     return render(request,'multibank.html', {'msg':msg})
 
 
+def client_report(request):
+    try:
+        user_id = request.session.get('user_id')
+        client_user = ClientDetail.objects.get(user_id=user_id)
 
+        # Get the start and end dates from the request
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
 
+        # Default to today's date if no date is provided
+        if not start_date:
+            start_date = date.today().isoformat()
+        if not end_date:
+            end_date = date.today().isoformat()
+
+        start_date = parse_date(start_date)
+        end_date = parse_date(end_date)
+
+        # Filter signals within the date range and order them by created_at in descending order
+        signals = ClientSignal.objects.filter(client_id=user_id, created_at__date__range=[start_date, end_date]).order_by('-created_at')
+
+        # Calculate total profit and loss for the date range
+        total_cumulative_pl = signals.aggregate(total_pl=Sum('cumulative_pl'))['total_pl']
+
+        dt = {
+            "s": signals,
+            "total_cumulative_pl": total_cumulative_pl,
+            "start_date": start_date,
+            "end_date": end_date
+        }
+        return render(request, 'client_report.html', dt)
+    except Exception as e:
+        print(e)
+        return redirect('client_login')
+    
+
+def Analysis(request):
+    return render(request, 'Analysis.html')
