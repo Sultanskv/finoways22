@@ -1399,3 +1399,4 @@ def client_report(request):
 
 def Analysis(request):
     return render(request, 'Analysis.html')
+

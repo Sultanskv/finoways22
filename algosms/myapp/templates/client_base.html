@@ -1,4 +1,5 @@
 {% load static %}
+
 <!doctype html>
 <html lang="en">
 
@@ -12,60 +13,12 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>Finoways</title>
   <style>
-    .list-group-item {
-      padding: 8px !important;
-      background-color: black;
-      color: gold;
-      border: 1px solid rgb(0, 0, 0);
-      font-size: larger;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .list-group {
-      text-align: left;
-    }
-
-    .list-group-item:hover {
-      background-color: gold;
-      color: black;
-    }
-
-    .sidebar {
-      background-color: black;
-      padding: 20px;
-      height: 100vh;
-      position: sticky;
-      top: 0;
-      overflow-y: auto;
-      background: linear-gradient(to bottom right, #000000, #000000);
-      box-shadow: 0px 0px 10px rgb(243 194 15 / 30%);
-      transform: perspective(1000px) rotateY(5deg);
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar img {
-      background-color: black;
-      padding: 10px;
-      border-color: #000;
-    }
-
-    .fa-house-user,
-    .fa-signal,
-    .fa-history,
-    .fa-chart-line,
-    .fa-handshake-angle,
-    .fa-user-lock,
-    .fa-lock {
-      font-size: 20px;
-      color: gold;
-      margin: 6px;
-    }
-
     .navbar-custom {
       background-color: black;
       margin-top: auto;
       margin-bottom: auto;
       box-shadow: 0 4px 8px rgba(245, 222, 74, 0.5);
+      height: 40;
     }
 
     .navbar-custom .navbar-brand {
@@ -87,6 +40,7 @@
       background-color: #000;
       box-shadow: 0 0 20px rgba(245, 222, 74, 0.5);
     }
+    
     .card-custom {
       margin-top: 20px;
       background-color: black;
@@ -101,7 +55,7 @@
     }
 
     .card-custom .card-body {
-      background-color: #242424;
+      background-color: #000000;
       color: gold;
     }
 
@@ -129,7 +83,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: fixed;
       margin-right: 10px;
+      left: 1280px;
+      bottom: 100px;
       transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -147,7 +104,7 @@
     .power-button-text {
       font-size: 25px;
       color: gold;
-      margin-left: 10px;
+      margin-left: 450px;
       font-weight: bold;
     }
 
@@ -190,6 +147,7 @@
       box-shadow: 0 4px 8px rgba(245, 222, 74, 0.5);
       transform: perspective(1000px) rotateX(3deg);
       transition: transform 0.3s ease;
+      height: 60px;
     }
 
     .navbar-custom:hover {
@@ -216,60 +174,65 @@
       color: gold;
     }
 
-    .sidebar:hover {
-      transform: perspective(1000px) rotateY(0deg);
+    .navbar-custom {
+      background-color: black;
+      padding: 10px 20px;
     }
 
-    .list-group-item {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .sidebar-bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: black;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     }
 
-    .list-group-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    .sidebar-bottom .list-group-item {
+      background-color: black;
+      color: gold;
+      border: none;
+      text-align: center;
+      flex-grow: 1;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .list-group-item i {
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    .sidebar-bottom .list-group-item:hover {
+      background-color: gold;
+      color: black;
     }
+
+    .sidebar-bottom .list-group-item i {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .sidebar-bottom .list-group-item span {
+      font-size: smaller;
+    }
+
+    .container-fluid {
+      padding-bottom: 60px; /* Ensure there's space for the bottom navbar */
+    }
+    .table-bordered td, .table-bordered th {
+  border: 1px solid #1e1e1e;
+}
   </style>
 </head>
 
-<body style="height: 100%;background-color: #000;">
+<body style="height: 100%; background-color: #000;">
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-2 p-0 sidebar">
-        <center><img src="{% static 'finowayslogo.png' %}" width="250" height="250"
-            class="img-thumbnail rounded-circle my-3"></center>
-        <div class="list-group">
-          <a href="{% url 'Analysis' %}"
-          class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/Analysis/' %} active {% endif %}"><i
-            class="fa-solid fa-chart-line"></i>ANALYSIS</a>
-          <a href="{% url 'client_dashboard' %}"
-            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/dashboard/' %} active {% endif %}"><i
-              class="fa-solid fa-house-user"></i>DASHBOARD</a>
-          <a href="{% url 'client_signals' %}"
-            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/signals/' %} active {% endif %}"><i
-              class="fa-solid fa-signal"></i>SIGNALS</a>
-          <a href="{% url 'client_trade_history' %}"
-            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/tradehistory/' %} active {% endif %}"><i
-              class="fa-solid fa-history"></i>TRADE HISTORY</a>
-          <a href="{% url 'client_tstatus' %}"
-            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/tradingstatus/' %} active {% endif %}"><i
-              class="fa-solid fa-chart-line"></i>TRADING STATUS</a>
-          <a href="{% url 'client_help_center' %}"
-            class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/client_help_center/' %} active {% endif %}"><i
-              class="fa-solid fa-handshake-angle"></i> HELP CENTER</a>
-        </div>
-      </div>
-      <div class="col-sm-10 p-2">
+      <div class="col-sm-12 p-2">
         <div class="container-fluid p-2">
           <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
-            <div class="power-button" id="powerButton">
-              <i class="fa fa-power-off"></i>
-            </div>
-            <span class="power-button-text">Connect With Broker</span>
+            <img src="{% static 'finowayslogo.png' %}" width="80" height="80">
+            <span class="power-button-text">FinoFxAlgo</span>
             <div class="ml-auto d-flex align-items-center">
               <a class="nav-link" href="#"><i class="fa-solid fa-bell"></i></a>
               <a class="nav-link" href="#" data-toggle="modal" data-target="#profileModal"><i
@@ -279,12 +242,45 @@
           <div class="card shadow card-custom" style="min-height: 89vh">
             <div class="card-body">
               {% block main %}
+              
               {% endblock %}
-            </div>
+
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div class="power-button" id="powerButton">
+    <i class="fa fa-power-off"></i>
+  </div>
+  <span class="power-button-text"></span>
+  </div>
+
+  <div class="sidebar-bottom">
+    <a href="{% url 'Analysis' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/Analysis/' %} active {% endif %}">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>LIVE MARKET</span>
+    </a>
+    <a href="{% url 'client_dashboard' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/dashboard/' %} active {% endif %}">
+      <i class="fa-solid fa-house-user"></i>
+      <span>DASHBOARD</span>
+    </a>
+    <a href="{% url 'client_signals' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/signals/' %} active {% endif %}">
+      <i class="fa-solid fa-signal"></i>
+      <span>SIGNALS</span>
+    </a>
+    <a href="{% url 'client_trade_history' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/tradehistory/' %} active {% endif %}">
+      <i class="fa-solid fa-history"></i>
+      <span>TRADE HISTORY</span>
+    </a>
+    <a href="{% url 'client_tstatus' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/tradingstatus/' %} active {% endif %}">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>TRADING STATUS</span>
+    </a>
+    <a href="{% url 'client_help_center' %}" class="list-group-item list-group-item-warning list-group-item-action {% if request.path == '/client_help_center/' %} active {% endif %}">
+      <i class="fa-solid fa-handshake-angle"></i>
+      <span>HELP CENTER</span>
+    </a>
   </div>
 
   <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel"

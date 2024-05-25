@@ -84,5 +84,5 @@ urlpatterns = [
     path('admin_help_center/', views.admin_help_center, name='admin_help_center'),
 
     path('Analysis/',views.Analysis, name='Analysis'),
-
+    
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -181,3 +181,5 @@ EMAIL_HOST_USER = 'coolairpoint.com@gmail.com'  # Your email address
 EMAIL_HOST_PASSWORD = 'cavq adzv eisp anei'      # Your email password or app-specific password
 
 
+
+LOGIN_REDIRECT_URL = 'client_dashboard'
